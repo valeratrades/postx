@@ -20,8 +20,11 @@ get_last_with_len = "allow"
 
 [dependencies]
 anyhow = "1.0.95"
+clap = { version = "4.5.29", features = ["derive"] }
 color-eyre = "0.6.3"
+config = { version = "0.15.8", features = ["toml"] }
 derive-new = "^0"
 failure = "0.1.8"
 headless_chrome = { version = "1.0.15", features = ["fetch", "nightly", "rustls"] }
 v_utils = "2.5.0"
+xdg = "2.5.2"
