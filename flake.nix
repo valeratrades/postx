@@ -32,14 +32,14 @@
           };
         };
         
+        manifest = (pkgs.lib.importTOML ./Cargo.toml).package;
         workflowContents = (import ./.github/workflows/ci.nix) { inherit pkgs; last-supported-version = "nightly-2025-01-01"; workflow-parts = v-parts.workflows; };
 
-        readme = (v-parts.readme-fw { inherit pkgs; last-supported-version = "nightly-1.85"; prj_name = "v_exchanges"; root = ./.; loc = "223"; licenses = [{ name = "Blue Oak 1.0.0"; out_path = "LICENSE"; }]; badges = [ "msrv" "crates_io" "docs_rs" "loc" "ci" ]; }).combined;
+        readme = (v-parts.readme-fw { inherit pkgs; last-supported-version = "nightly-1.85"; prj_name = manifest.name; root = ./.; loc = "223"; licenses = [{ name = "Blue Oak 1.0.0"; out_path = "LICENSE"; }]; badges = [ "msrv" "crates_io" "docs_rs" "loc" "ci" ]; }).combined;
       in
       {
         packages =
           let
-            manifest = (pkgs.lib.importTOML ./Cargo.toml).package;
             rust = (pkgs.rust-bin.fromRustupToolchainFile ./.cargo/rust-toolchain.toml);
             rustc = rust;
             cargo = rust;
