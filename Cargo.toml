@@ -18,7 +18,10 @@ tabs_in_doc_comments = "allow"
 get_first = "allow"
 get_last_with_len = "allow"
 
-
 [dependencies]
+anyhow = "1.0.95"
+color-eyre = "0.6.3"
 derive-new = "^0"
-color-eyre = "^0.6.3"
+failure = "0.1.8"
+headless_chrome = { version = "1.0.15", features = ["fetch", "nightly", "rustls"] }
+v_utils = "2.5.0"
