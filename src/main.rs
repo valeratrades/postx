@@ -1,4 +1,3 @@
-
 use clap::{Parser, Subcommand};
 use postx::{AppConfig, FollowArgs, run};
 use v_utils::prelude::*;
@@ -16,13 +15,17 @@ struct Cli {
 	/// Twitter password
 	#[arg(short, long)]
 	password: String,
+	/// Telegram bot token
+	#[arg(short, long)]
+	token: String,
 }
 #[derive(Subcommand)]
 enum Commands {
 	Follow(FollowArgs),
 }
 
-fn main() {
+#[tokio::main]
+async fn main() {
 	v_utils::clientside!();
 
 	let cli = Cli::parse();
@@ -40,12 +43,18 @@ fn main() {
 		if !cli.password.is_empty() {
 			conf.twitter.password = cli.password.clone();
 		};
+		if !cli.token.is_empty() {
+			conf.telegram.bot_token = cli.token.clone();
+		};
+		assert!(!conf.twitter.username.is_empty());
+		assert!(!conf.twitter.password.is_empty());
+		assert!(!conf.telegram.bot_token.is_empty());
 		conf
 	};
 
 	match cli.command {
 		Commands::Follow(args) => {
-			run(conf, args).unwrap();
+			run(conf, args).await.unwrap();
 		}
 	}
 }

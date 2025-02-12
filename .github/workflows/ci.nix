@@ -7,7 +7,7 @@ let
   rust-base = import workflow-parts.rust.base { inherit pkgs; };
   rustc-versions = [
     "nightly"
-    "CURRENT_NIGHTLY_BY_DATE"
+    "nightly-2025-01-01"
   ];
   rust-jobs-errors = {
     tests = import workflow-parts.rust.tests { inherit rustc-versions; };

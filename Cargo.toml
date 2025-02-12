@@ -23,8 +23,12 @@ anyhow = "1.0.95"
 clap = { version = "4.5.29", features = ["derive"] }
 color-eyre = "0.6.3"
 config = { version = "0.15.8", features = ["toml"] }
+ctrlc = "3.4.5"
 derive-new = "^0"
 failure = "0.1.8"
+futures-concurrency = "7.6.3"
 headless_chrome = { version = "1.0.15", features = ["fetch", "nightly", "rustls"] }
+teloxide = "0.13.0"
+tokio = { version = "1.43.0", features = ["macros", "rt-multi-thread"] }
 v_utils = "2.5.0"
 xdg = "2.5.2"

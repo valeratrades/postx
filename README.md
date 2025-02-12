@@ -2,7 +2,7 @@
 ![Minimum Supported Rust Version](https://img.shields.io/badge/nightly-1.85+-ab6000.svg)
 [<img alt="crates.io" src="https://img.shields.io/crates/v/postx.svg?color=fc8d62&logo=rust" height="20" style=flat-square>](https://crates.io/crates/postx)
 [<img alt="docs.rs" src="https://img.shields.io/badge/docs.rs-66c2a5?style=for-the-badge&labelColor=555555&logo=docs.rs&style=flat-square" height="20">](https://docs.rs/postx)
-![Lines Of Code](https://img.shields.io/badge/LoC-223-lightblue)
+![Lines Of Code](https://img.shields.io/badge/LoC-306-lightblue)
 <br>
 [<img alt="ci errors" src="https://img.shields.io/github/actions/workflow/status/valeratrades/postx/errors.yml?branch=master&style=for-the-badge&style=flat-square&label=errors&labelColor=420d09" height="20">](https://github.com/valeratrades/postx/actions?query=branch%3Amaster) <!--NB: Won't find it if repo is private-->
 [<img alt="ci warnings" src="https://img.shields.io/github/actions/workflow/status/valeratrades/postx/warnings.yml?branch=master&style=for-the-badge&style=flat-square&label=warnings&labelColor=d16002" height="20">](https://github.com/valeratrades/postx/actions?query=branch%3Amaster) <!--NB: Won't find it if repo is private-->
@@ -21,7 +21,15 @@ A small little thing to redirect posts from Telegram to Twitter.
 
 ## Usage
 ```sh
-postx --follow CryptoAttack_en -p PASSWORD -u USERNAME
+postx -p PASSWORD -u USERNAME -t TG_BOT_TOKEN follow "CryptoAttack_en"
+```
+
+Errors are an after-thought, can panic in case of poor connection / re-login rate-limit, really the only way to somewhat run it is
+```sh
+while true; do
+	postx <args>
+	echo "something went wrong, tweet on which it did will be skipped"
+done
 ```
 		
 

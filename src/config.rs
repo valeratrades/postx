@@ -4,12 +4,18 @@ use v_utils::{io::ExpandedPath, macros::MyConfigPrimitives};
 #[derive(Clone, Debug, Default, MyConfigPrimitives)]
 pub struct AppConfig {
 	pub twitter: TwitterConf,
+	pub telegram: TelegramConf,
 }
 
 #[derive(Clone, Debug, Default, MyConfigPrimitives)]
 pub struct TwitterConf {
 	pub username: String,
 	pub password: String,
+}
+
+#[derive(Clone, Debug, Default, MyConfigPrimitives)]
+pub struct TelegramConf {
+	pub bot_token: String,
 }
 
 impl AppConfig {
