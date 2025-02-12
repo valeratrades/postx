@@ -8,7 +8,6 @@ pub use config::{AppConfig, TwitterConf};
 use futures_concurrency::future::FutureExt as _;
 use headless_chrome::{Browser, LaunchOptions, browser::tab::ModifierKey};
 use teloxide::prelude::*;
-use tokio::sync::mpsc;
 use v_utils::prelude::*;
 
 #[derive(Debug, Args, Default)]
@@ -40,41 +39,36 @@ pub async fn run(config: AppConfig, args: FollowArgs) -> Result<()> {
 		tokio::spawn(listen_on_channel(Arc::clone(&arc_tg_conf), Handle::new(channel_name), tx.clone()));
 	}
 
-	loop {
-		tokio::select! {
-		_ = tokio::signal::ctrl_c() => {
-			info!("Received Ctrl-C, shutting down gracefully...");
-			break;
-		}
-			msg = rx.recv() => {
-				match msg {
-					Some(msg) => {
-						debug!("Processing message: {:?}", msg);
+	let shutdown = async {
+		tokio::signal::ctrl_c().await.expect("Failed to listen for Ctrl-C");
+		info!("Received Ctrl-C, shutting down gracefully...");
+		Ok(())
+	};
+	let main = async {
+		while let Some(msg) = rx.recv().await {
+			debug!("Processing message: {:?}", msg);
 
-						if let Some(photo) = msg.photo() {
-							warn!("Photo received: {:?}, handling is not yet implemented, IGNORING.", photo);
-						}
+			if let Some(photo) = msg.photo() {
+				warn!("Photo received: {:?}, handling is not yet implemented, IGNORING.", photo);
+			}
 
-						if let Some(document) = msg.document() {
-							warn!("Document received: {:?}, handling is not yet implemented, IGNORING.", document);
-						}
+			if let Some(document) = msg.document() {
+				warn!("Document received: {:?}, handling is not yet implemented, IGNORING.", document);
+			}
 
-						if let Some(text) = msg.text() {
-							info!("posting new tweet:\n```\n{text}\n```");
-							if let Err(e) = post_tweet(config.twitter.clone(), text) {
-								error!("Failed to post tweet: {}", e);
-							}
-						} else {
-							debug!("Message contained no text");
-						}
-					}
-					None => {
-						bail!("Channel closed unexpectedly");
-					}
+			if let Some(text) = msg.text() {
+				info!("posting new tweet:\n```\n{text}\n```");
+				if let Err(e) = post_tweet(config.twitter.clone(), text) {
+					error!("Failed to post tweet: {}", e);
 				}
+			} else {
+				debug!("Message contained no text");
 			}
 		}
-	}
+		Err(eyre!("Channel closed unexpectedly"))
+	};
+	shutdown.race(main).await?;
+
 	Ok(())
 }
 
